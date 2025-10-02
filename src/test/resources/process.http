@@ -1,0 +1,16 @@
+### POST - Crear proceso exitoso
+POST http://localhost:8080/process
+Content-Type: application/json
+
+{
+  "processId": "PROC-001",
+  "name": "Proceso de Importación",
+  "initDateTime": "2024-01-15T10:00:00",
+  "endDateTime": "2026-01-15T12:30:00"
+}
+
+### GET - Obtener todos los procesos
+GET http://localhost:8080/process
+
+### GET - Obtener estadísticas
+GET http://localhost:8080/process/statistics?init=2024-01-15T00:00:00&end=2024-01-16T23:59:59
