@@ -4,10 +4,10 @@
 
 Este proyecto es una prueba técnica desarrollada para Inditex. La solución inicial fue implementada durante una sesión en directo de 1 hora, y posteriormente evolucionada con mejoras y funcionalidades adicionales.
 
-## Estructura del Desarrollo
+## Estructura de Ramas
 
-- **Commit inicial**: La implementación básica realizada durante la prueba técnica en directo (segundo commit del repositorio)
-- **Rama de evolución**: Desarrollo posterior con mejoras y funcionalidades extendidas en una rama separada
+- **master**: La implementación básica realizada durante la prueba técnica en directo (segundo commit del repositorio)
+- **evol**: Desarrollo posterior con mejoras y funcionalidades extendidas en una rama separada
 
 ## Descripción Original de la Prueba Técnica
 
