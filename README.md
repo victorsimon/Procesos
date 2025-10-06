@@ -83,3 +83,15 @@ Esta solución incluye:
 - Spring Data JPA
 - JUnit/Mockito para testing
 - Maven/Gradle
+
+## PLAN DE MEJORA
+
+## ITO 1: CORRECCIONES CRÍTICAS
+
+Tras la revisión de la prueba entregada detecto los siguientes puntos como prioritarios. 
+1. Corregir bug en test unitario (línea 42 de CreateProcessUseCaseImplTest.java)
+   - Actualmente comprueba initDateTime dos veces, debe verificar endDateTime
+2. Añadir anotación @Repository faltante
+   - ProcessSQLRepository no tiene anotación Spring, causará error en runtime
+3. Mejorar validación en ProcessController
+   - La validación de fechas debe estar en la capa de dominio, no en el controller
