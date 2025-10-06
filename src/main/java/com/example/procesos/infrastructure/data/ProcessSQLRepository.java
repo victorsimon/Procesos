@@ -5,9 +5,13 @@ import com.example.procesos.domain.port.out.ProcessRepository;
 import com.example.procesos.infrastructure.data.jpa.entity.ProcessEntity;
 import com.example.procesos.infrastructure.data.jpa.entity.ProcessJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+@Primary
 @RequiredArgsConstructor
 public class ProcessSQLRepository implements ProcessRepository {
 
