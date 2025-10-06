@@ -16,10 +16,10 @@ public class ProcessMapper {
 
     public static ProcessEntity toEntity(Process process) {
         ProcessEntity processEntity = new ProcessEntity();
-        processEntity.setProcessId(process.getProcessId());
-        processEntity.setName(process.getName());
-        processEntity.setInitDateTime(process.getInitDateTime());
-        processEntity.setEndDateTime(process.getEndDateTime());
+        processEntity.setProcessId(process.processId());
+        processEntity.setName(process.name());
+        processEntity.setInitDateTime(process.initDateTime());
+        processEntity.setEndDateTime(process.endDateTime());
         return processEntity;
     }
 }

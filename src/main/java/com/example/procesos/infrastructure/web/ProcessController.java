@@ -4,6 +4,7 @@ import com.example.procesos.domain.port.in.CreateProcessUseCase;
 import com.example.procesos.domain.Process;
 import com.example.procesos.domain.port.in.ListAllProcessesUseCase;
 import com.example.procesos.domain.port.in.GetProcessStatisticsUseCase;
+import com.example.procesos.domain.validation.exception.InvalidProcessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ProcessController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<ProcessDTO> save(@Valid @RequestBody ProcessDTO processDto) {
+    public ResponseEntity<ProcessDTO> save(@Valid @RequestBody ProcessDTO processDto) throws InvalidProcessException {
         if (processDto.endDateTime().isBefore(processDto.initDateTime())) {
             throw new IllegalArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio");
         }
