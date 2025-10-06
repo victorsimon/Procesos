@@ -1,8 +1,11 @@
 package com.example.procesos.application.usecase;
 
-import com.example.procesos.application.util.validator.ProcessAllwaysTrueValidator;
+import com.example.procesos.application.util.validator.ProcessAlwaysValidValidator;
+import com.example.procesos.application.util.validator.ProcessSimpleValidatorImpl;
 import com.example.procesos.domain.Process;
 import com.example.procesos.domain.port.out.ProcessRepository;
+import com.example.procesos.domain.validation.ProcessValidator;
+import com.example.procesos.domain.validation.exception.InvalidProcessException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -12,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreateProcessUseCaseImplTest {
 
-    private final ProcessAllwaysTrueValidator processValidator = new ProcessAllwaysTrueValidator();
     private final ProcessRepository processRepository = new ProcessRepository() {
         @Override
         public Process save(Process process) {
@@ -26,8 +28,9 @@ class CreateProcessUseCaseImplTest {
     };
 
     @Test
-    void createHappyCase() {
+    void createHappyCase() throws InvalidProcessException {
         // Given
+        ProcessValidator processValidator = new ProcessSimpleValidatorImpl();
         CreateProcessUseCaseImpl sut = new CreateProcessUseCaseImpl(processRepository, processValidator);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime plusOneWeek = now.plusWeeks(1);
@@ -37,9 +40,26 @@ class CreateProcessUseCaseImplTest {
 
         // Then
         assertNotNull(result);
-        assertEquals("123", result.getProcessId());
-        assertEquals("test", result.getName());
-        assertEquals(now, result.getInitDateTime());
-        assertEquals(plusOneWeek, result.getEndDateTime());
+        assertEquals("123", result.processId());
+        assertEquals("test", result.name());
+        assertEquals(now, result.initDateTime());
+        assertEquals(plusOneWeek, result.endDateTime());
     }
+
+    @Test
+    void createInvalidProcessException() throws InvalidProcessException {
+        // Given
+        ProcessValidator processValidator = new ProcessSimpleValidatorImpl();
+        CreateProcessUseCaseImpl sut = new CreateProcessUseCaseImpl(processRepository, processValidator);
+
+        // When
+        InvalidProcessException exception = assertThrows(
+                InvalidProcessException.class,
+                () -> sut.create(null, null, null, null)
+        );
+
+        // Then
+        assertNotNull(exception);
+    }
+
 }

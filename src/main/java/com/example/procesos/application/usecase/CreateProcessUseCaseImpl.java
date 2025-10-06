@@ -3,7 +3,8 @@ package com.example.procesos.application.usecase;
 import com.example.procesos.domain.port.in.CreateProcessUseCase;
 import com.example.procesos.domain.Process;
 import com.example.procesos.domain.port.out.ProcessRepository;
-import com.example.procesos.domain.validator.ProcessValidator;
+import com.example.procesos.domain.validation.ProcessValidator;
+import com.example.procesos.domain.validation.exception.InvalidProcessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +18,9 @@ public class CreateProcessUseCaseImpl implements CreateProcessUseCase {
     private final ProcessValidator processValidator;
 
     @Override
-    public Process create(String processId, String name, LocalDateTime initDateTime, LocalDateTime endDateTime) {
+    public Process create(String processId, String name, LocalDateTime initDateTime, LocalDateTime endDateTime) throws InvalidProcessException {
         Process process = new Process(processId, name, initDateTime, endDateTime);
-        if (!processValidator.validate(process)) {
-            throw new IllegalArgumentException("Invalid process data");
-        }
-        process = processRepository.save(process);
+        processRepository.save(processValidator.validate(process));
         return process;
     }
 }

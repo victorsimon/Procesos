@@ -28,17 +28,17 @@ public class GetProcessStatisticsUseCaseImpl implements GetProcessStatisticsUseC
 
         Map<String, Long> processesByName = allProcesses.stream()
                 .collect(Collectors.groupingBy(
-                        Process::getName,
+                        Process::name,
                         Collectors.counting()
                 ));
 
         LocalDateTime earliestDate = allProcesses.stream()
-                .map(Process::getInitDateTime)
+                .map(Process::initDateTime)
                 .min(LocalDateTime::compareTo)
                 .orElse(initDateTime);
 
         LocalDateTime latestDate = allProcesses.stream()
-                .map(Process::getEndDateTime)
+                .map(Process::endDateTime)
                 .max(LocalDateTime::compareTo)
                 .orElse(endDateTime);
 
@@ -52,8 +52,8 @@ public class GetProcessStatisticsUseCaseImpl implements GetProcessStatisticsUseC
     }
 
     private boolean isProcessActive(Process process, LocalDateTime startDate, LocalDateTime endDate) {
-        LocalDateTime processStart = process.getInitDateTime();
-        LocalDateTime processEnd = process.getEndDateTime();
+        LocalDateTime processStart = process.initDateTime();
+        LocalDateTime processEnd = process.endDateTime();
 
         return !processStart.isAfter(endDate) && !processEnd.isBefore(startDate);
     }

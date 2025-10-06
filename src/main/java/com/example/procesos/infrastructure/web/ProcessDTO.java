@@ -14,10 +14,10 @@ public record ProcessDTO(
 ) {
     public static ProcessDTO from(Process process) {
         return new ProcessDTO(
-                process.getProcessId(),
-                process.getName(),
-                process.getInitDateTime(),
-                process.getEndDateTime()
+                process.processId(),
+                process.name(),
+                process.initDateTime(),
+                process.endDateTime()
         );
     }
 }
