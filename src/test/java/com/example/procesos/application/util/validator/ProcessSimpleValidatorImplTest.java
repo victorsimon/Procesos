@@ -6,28 +6,36 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.procesos.domain.Process;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDateTime;
+import java.util.stream.Stream;
 
 class ProcessSimpleValidatorImplTest {
 
     private final ProcessSimpleValidatorImpl sut = new ProcessSimpleValidatorImpl();
 
-    @Test
-    void validateHappyPath() throws InvalidProcessException {
+    @ParameterizedTest
+    @MethodSource("validProcesses")
+    void validateHappyPath(Process process) throws InvalidProcessException {
         // Given
-        Process process = new Process(
-                "123",
-                "123",
-                LocalDateTime.now(),
-                LocalDateTime.now().plusWeeks(1)
-        );
 
         // When
         Process validated = sut.validate(process);
 
         // Then
         assertNotNull(validated);
+    }
+
+    private static Stream<Process> validProcesses() {
+        return Stream.of(
+                new Process("123", "123", LocalDateTime.now(), LocalDateTime.now().plusWeeks(1)),
+                new Process("aaa", "bbb", LocalDateTime.now(), LocalDateTime.now().plusDays(1)),
+                new Process("a123", "b123", LocalDateTime.now().minusDays(3), LocalDateTime.now().plusWeeks(1)),
+                new Process("123", "123", LocalDateTime.now().minusDays(1), LocalDateTime.now().plusMinutes(2))
+        );
     }
 
     @Test
@@ -44,64 +52,46 @@ class ProcessSimpleValidatorImplTest {
         assertNotNull(exception);
     }
 
-    @Test
-    void validateInvalidProcessId() {
+    @ParameterizedTest
+    @MethodSource("invalidProcessIds")
+    void validateInvalidProcessId(Process process) {
         // Given
 
         // When
-        InvalidProcessIdException exceptionOnNull = assertThrows(
+        InvalidProcessIdException exception = assertThrows(
                 InvalidProcessIdException.class,
-                () -> sut.validate(new Process(
-                        null,
-                        "123",
-                        LocalDateTime.now(),
-                        LocalDateTime.now().plusWeeks(1)
-                ))
-        );
-        InvalidProcessIdException exceptionOnBlank = assertThrows(
-                InvalidProcessIdException.class,
-                () -> sut.validate(new Process(
-                        "",
-                        "123",
-                        LocalDateTime.now(),
-                        LocalDateTime.now().plusWeeks(1)
-                ))
+                () -> sut.validate(process)
         );
 
         // Then
-        assertNotNull(exceptionOnNull);
-        assertNotNull(exceptionOnBlank);
-
+        assertNotNull(exception);
+    }
+    private static Stream<Process> invalidProcessIds() {
+        return Stream.of(
+                new Process(null, "123", LocalDateTime.now(), LocalDateTime.now().plusWeeks(1)),
+                new Process("", "bbb", LocalDateTime.now(), LocalDateTime.now().plusDays(1))
+        );
     }
 
-    @Test
-    void validateInvalidProcessName() {
+    @ParameterizedTest
+    @MethodSource("invalidProcessNames")
+    void validateInvalidProcessName(Process process) {
         // Given
 
         // When
-        InvalidProcessNameException exceptionOnNull = assertThrows(
+        InvalidProcessNameException exception = assertThrows(
                 InvalidProcessNameException.class,
-                () -> sut.validate(new Process(
-                        "123",
-                        null,
-                        LocalDateTime.now(),
-                        LocalDateTime.now().plusWeeks(1)
-                ))
-        );
-        InvalidProcessNameException exceptionOnBlank = assertThrows(
-                InvalidProcessNameException.class,
-                () -> sut.validate(new Process(
-                        "123",
-                        "",
-                        LocalDateTime.now(),
-                        LocalDateTime.now().plusWeeks(1)
-                ))
+                () -> sut.validate(process)
         );
 
         // Then
-        assertNotNull(exceptionOnNull);
-        assertNotNull(exceptionOnBlank);
-
+        assertNotNull(exception);
+    }
+    private static Stream<Process> invalidProcessNames() {
+        return Stream.of(
+                new Process("123", null, LocalDateTime.now(), LocalDateTime.now().plusWeeks(1)),
+                new Process("123", "", LocalDateTime.now(), LocalDateTime.now().plusDays(1))
+        );
     }
 
     @Test
