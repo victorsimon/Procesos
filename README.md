@@ -86,7 +86,7 @@ Esta solución incluye:
 
 ## PLAN DE MEJORA
 
-## ITO 1: CORRECCIONES CRÍTICAS
+### PASO 1: CORRECCIONES CRÍTICAS
 
 Tras la revisión de la prueba entregada detecto los siguientes puntos como prioritarios. 
 1. Corregir bug en test unitario (línea 42 de CreateProcessUseCaseImplTest.java)
@@ -95,3 +95,17 @@ Tras la revisión de la prueba entregada detecto los siguientes puntos como prio
    - ProcessSQLRepository no tiene anotación Spring, causará error en runtime
 3. Mejorar validación en ProcessController
    - La validación de fechas debe estar en la capa de dominio, no en el controller
+
+### PASO 2: ARQUITECTURA HEXAGONAL PURA
+
+1. Eliminar acoplamiento infraestructura → dominio
+   - GetProcessStatisticsUseCaseImpl importa ProcessStatisticsDTO (infraestructura)
+   - Crear modelo de dominio ProcessStatistics separado del DTO
+2. Implementar ValueObjects del dominio
+   - ProcessId como ValueObject (validación, inmutabilidad)
+   - ProcessName como ValueObject (validación de nombre)
+   - DateTimeRange para encapsular inicio/fin con validaciones
+3. Crear excepciones de dominio personalizadas
+   - InvalidProcessException
+   - InvalidDateRangeException
+   - ProcessNotFoundException (para futuras operaciones)
